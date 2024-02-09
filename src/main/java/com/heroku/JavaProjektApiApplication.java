@@ -17,20 +17,4 @@ public class JavaProjektApiApplication {
         return "Hello World!!!";
     }
 
-
-    /*
-    @Bean
-    CommandLineRunner runner(QuestionRepository questionRepository, ImageRepository imageRepository){
-        return args->{
-            //Integer[] correct={0, 3};
-            //String[] options={"1", "2", "3", "4", "5"};
-            Question question = new Question("Dokad noca tupta jez",
-                    List.of(1,3),
-                    List.of("1", "2", "3", "4"));
-            questionRepository.insert(question);
-            Image image = new Image("ICK", "design_4_all",0, new URL("https://imgur.com/"));
-            imageRepository.insert(image);
-        };
-    }
-    */
 }

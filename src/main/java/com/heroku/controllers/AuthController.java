@@ -1,12 +1,11 @@
 package com.heroku.controllers;
 
 
+import com.heroku.models.Auth;
 import com.heroku.services.AuthService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -18,7 +17,14 @@ public class AuthController {
             @RequestParam String username,
             @RequestParam String password
     ){
-        return authService.authUser(username, password);
+        return authService.AuthUser(username, password);
     }
-
+    @PostMapping("add")
+    public ResponseEntity<?> createAuth(
+            @RequestParam String username,
+            @RequestParam String password
+    ){
+        Auth auth = new Auth(username, password);
+        return authService.AddAuth(auth);
+    }
 }
