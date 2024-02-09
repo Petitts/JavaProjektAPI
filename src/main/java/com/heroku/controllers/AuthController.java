@@ -33,4 +33,16 @@ public class AuthController {
                                         @RequestParam(required = false) String password){
         return authService.updateAuth(oldUsername, username, password);
     }
+    @DeleteMapping("{username}")
+    public ResponseEntity<?> deleteAuth(@PathVariable String username){
+        return authService.deleteAuth(username);
+    }
+    @GetMapping("{username}")
+    public ResponseEntity<?> getAuth(@PathVariable String username){
+        return authService.getAuth(username);
+    }
+    @GetMapping
+    public ResponseEntity<?> getAllAuths(){
+        return authService.getAllAuths();
+    }
 }

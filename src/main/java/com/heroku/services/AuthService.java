@@ -59,6 +59,23 @@ public class AuthService {
         authRepository.save(updatedAuth);
         return ResponseEntity.ok(updatedAuth);
     }
+    public ResponseEntity<?> deleteAuth(String username){
+        if(!authRepository.existsByUser(username)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+username+" does not exist");
+        }
+        Auth auth = authRepository.findAuthByUser(username);
+        authRepository.delete(auth);
+        return ResponseEntity.ok("User "+auth.getUser()+" succesful deleted");
+    }
+    public ResponseEntity<?> getAuth(String username){
+        if(!authRepository.existsByUser(username)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+username+" does not exist");
+        }
+        return ResponseEntity.ok(authRepository.findAuthByUser(username));
+    }
+    public ResponseEntity<?> getAllAuths(){
+        return ResponseEntity.ok(authRepository.findAll());
+    }
     private String createHash(String toHash) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] plainBytes = toHash.getBytes();
