@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Code {
     @Id
     private String id;
-    private String type;
+    private String type = "code";
     private String language;
     private String laboratory;
     private String exercise;

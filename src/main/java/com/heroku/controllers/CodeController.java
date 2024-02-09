@@ -4,10 +4,8 @@ package com.heroku.controllers;
 import com.heroku.models.Code;
 import com.heroku.services.CodeService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
@@ -79,5 +77,17 @@ public class CodeController {
             return codeService.getTitles(language, laboratory, exercise);
         }
         return null;
+    }
+    @PostMapping
+    public ResponseEntity<?> addCode(String language, String laboratory, String exercise, String title, String content){
+        return codeService.addCode(language, laboratory, exercise, title, content);
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<?> updateCode(@PathVariable String id, String language, String laboratory, String exercise, String title, String content){
+        return codeService.updateCode(id, language, laboratory, exercise, title, content);
+    }
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteCode(@PathVariable String id){
+        return codeService.deleteCode(id);
     }
 }

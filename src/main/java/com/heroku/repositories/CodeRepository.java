@@ -19,4 +19,5 @@ public interface CodeRepository extends MongoRepository<Code, String> {
     List<Code> findDistinctByTypeAndLanguage(String type, String language); //get laboratory
     List<Code> findDistinctByTypeAndLanguageAndLaboratory(String type, String language, String laboratory); //get exercise
     List<Code> findDistinctByTypeAndLanguageAndLaboratoryAndExercise(String type, String language, String laboratory, String exercise); // get codes
+    List<Code> findCodeById(String id);
 }

@@ -4,6 +4,8 @@ import com.heroku.models.Code;
 import com.heroku.repositories.CodeRepository;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,52 +17,24 @@ public class CodeService {
     private final CodeRepository codeRepository;
     public List<Code> getAllCodes(){
         List<Code> docuemnts = codeRepository.findAll();
-        List<Code> result = new ArrayList<>();
-        for(Code document : docuemnts){
-            if(document.getLanguage() == null){
-                result.add(document);
-            }
-        }
-        return result;
+        return docuemnts;
     }
     public List<Code> getLanguageCodes(String language) {
         List<Code> docuemnts = codeRepository.findCodesByLanguage(language);
         List<Code> result = new ArrayList<>();
-        for (Code document : docuemnts) {
-            if (document.getLaboratory() == null) {
-                result.add(document);
-            }
-        }
-        return result;
+        return docuemnts;
     }
     public List<Code> getLaboratoryCodes(String language, String laboratory)
     {
         List<Code> docuemnts = codeRepository.findCodesByLanguageAndLaboratory(language, laboratory);
-        List<Code> result = new ArrayList<>();
-        for (Code document : docuemnts) {
-            if (document.getExercise() == null) {
-                result.add(document);
-            }
-        }
-        return result;
+        return docuemnts;
         }
 
     public List<Code> getExerciseCodes(String language, String laboratory, String exercise){
         return codeRepository.findCodesByLanguageAndLaboratoryAndExercise( language,  laboratory,  exercise);
     }
     public List<Code> getTitleCode(String title, String language, String laboratory, String exercise){
-        if(title == null){
-            return null;
-        }
-        if(exercise != null && laboratory != null && language != null){
-            return codeRepository.findCodeByLanguageAndLaboratoryAndExerciseAndTitle(language, laboratory, exercise, title);
-        }
-        else if(exercise == null && laboratory != null && language != null){
-            return codeRepository.findCodeByLanguageAndLaboratoryAndTitle(language, laboratory, title);
-        }else if(exercise == null && laboratory == null && language != null) {
-            return codeRepository.findCodeByLanguageAndTitle(language, title);
-        }
-        return codeRepository.findCodeByType(title);
+        return codeRepository.findCodeByLanguageAndLaboratoryAndExerciseAndTitle(language, laboratory, exercise, title);
     }
     public List<String> getLanguages(){
         List<Code> documents = codeRepository.findDistinctByType("code");
@@ -98,4 +72,60 @@ public class CodeService {
         }
         return titles;
     }
+    public ResponseEntity<?> addCode(String language, String laboratory, String exercise, String title, String content) {
+        if(title == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Title is required");
+        }
+        if(language == null){
+            laboratory = null;
+            exercise = null;
+        } else if (laboratory == null) {
+            exercise = null;
+        }
+        List<Code> codes = codeRepository.findCodeByLanguageAndLaboratoryAndExerciseAndTitle(language, laboratory, exercise, title);
+        if(codes.isEmpty()){
+            Code newCode = new Code(language, laboratory, exercise, title, content);
+            codeRepository.save(newCode);
+            return ResponseEntity.ok(newCode);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code already exist");
+        }
+    }
+    public ResponseEntity<?> updateCode(String id, String language, String laboratory, String exercise, String title, String content){
+        List<Code> codes = codeRepository.findCodeById(id);
+        if(codes.size() == 1){
+            Code updatedCode = codes.get(0);
+            if(language != null){
+                updatedCode.setLanguage(language);
+            }
+            if(laboratory != null && updatedCode.getLanguage() != null){
+                updatedCode.setLaboratory(laboratory);
+            }
+            if(exercise != null && updatedCode.getLanguage() != null && updatedCode.getLaboratory() != null){
+                updatedCode.setExercise(exercise);
+            }
+            if(title != null){
+                updatedCode.setTitle(title);
+            }
+            if(content != null){
+                updatedCode.setContent(content);
+            }
+            codeRepository.save(updatedCode);
+            return ResponseEntity.ok(updatedCode);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Code not found");
+        }
+    }
+    public ResponseEntity<?> deleteCode(String id){
+        List<Code> codes = codeRepository.findCodeById(id);
+        if(codes.size() == 1){
+            Code deletedCode = codes.get(0);
+            codeRepository.delete(deletedCode);
+            return ResponseEntity.ok("Code deleted successful");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Code not found");
+        }
+
+    }
 }
+
