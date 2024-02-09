@@ -17,7 +17,7 @@ public class AuthController {
             @RequestParam String username,
             @RequestParam String password
     ){
-        return authService.AuthUser(username, password);
+        return authService.authUser(username, password);
     }
     @PostMapping("add")
     public ResponseEntity<?> createAuth(
@@ -25,6 +25,12 @@ public class AuthController {
             @RequestParam String password
     ){
         Auth auth = new Auth(username, password);
-        return authService.AddAuth(auth);
+        return authService.addAuth(auth);
+    }
+    @PutMapping("{oldUsername}")
+    public ResponseEntity<?> updateAuth(@PathVariable String oldUsername,
+                                        @RequestParam(required = false) String username,
+                                        @RequestParam(required = false) String password){
+        return authService.updateAuth(oldUsername, username, password);
     }
 }

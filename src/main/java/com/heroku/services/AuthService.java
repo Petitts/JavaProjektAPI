@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 @Service
 public class AuthService {
     private final AuthRepository authRepository;
-    public boolean AuthUser(String username, String password){
+    public boolean authUser(String username, String password){
         if(authRepository.findAuthByUser(username) != null){
             Auth correctAuth = authRepository.findAuthByUser(username);
             if(correctAuth.getPassword().equals(password)) return true;
@@ -26,7 +26,7 @@ public class AuthService {
         else return false;
 
     }
-    public ResponseEntity<?> AddAuth(Auth auth){
+    public ResponseEntity<?> addAuth(Auth auth){
         try {
             if(authRepository.findAuthByUser(auth.getUser()) == null){
                 String hashedPassword = createHash(auth.getPassword());
@@ -38,6 +38,26 @@ public class AuthService {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No such algorithm");
         }
+    }
+    public ResponseEntity<?> updateAuth(String oldUsername, String newUsername, String newPassword){
+        if(!authRepository.existsByUser(oldUsername)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+oldUsername+" does not exist");
+        }
+        Auth updatedAuth = authRepository.findAuthByUser(oldUsername);
+        if(newUsername != null){
+            updatedAuth.setUser(newUsername);
+        }
+        if(newPassword != null){
+            try {
+                String hashedNewPassword = createHash(newPassword);
+                updatedAuth.setPassword(hashedNewPassword);
+            }catch (NoSuchAlgorithmException ex){
+                ex.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No such algorithm");
+            }
+        }
+        authRepository.save(updatedAuth);
+        return ResponseEntity.ok(updatedAuth);
     }
     private String createHash(String toHash) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
