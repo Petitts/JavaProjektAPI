@@ -45,7 +45,12 @@ public class AuthService {
         }
         Auth updatedAuth = authRepository.findAuthByUser(oldUsername);
         if(newUsername != null){
-            updatedAuth.setUser(newUsername);
+            if(!authRepository.existsByUser(oldUsername)){
+                updatedAuth.setUser(newUsername);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+newUsername+" already exist");
+            }
         }
         if(newPassword != null){
             try {
