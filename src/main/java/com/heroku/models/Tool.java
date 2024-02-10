@@ -14,11 +14,11 @@ public class Tool {
     private String url;
     private String a;
 
-    public Tool(String type, String title, String url, String a) {
+    public Tool(String type, String title, String url) {
         this.type = type;
         this.title = title;
         this.url = url;
-        this.a = a;
+        this.a = "a";
     }
 
     public String getId() {

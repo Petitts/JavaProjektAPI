@@ -10,4 +10,6 @@ public interface ToolRepository extends MongoRepository<Tool, String> {
     Tool findToolByTypeAndTitle(String type, String title);
     List<Tool> findDistinctByA(String a);
     List<Tool> findDistinctByAAndType(String a, String type);
+    Boolean existsByTypeAndTitle(String type, String title);
+    Tool findToolById(String id);
 }
