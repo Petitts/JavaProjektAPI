@@ -12,11 +12,11 @@ public class Question {
     @Id
     private String id;
     private String questionText;
-    private List<String> correctAnswers;
+    private List<Integer> correctAnswers;
     private List<String> options;
     private String imageURL;
 
-    public Question(String questionText, List<String> correctAnswers, List<String> options, String imageURL) {
+    public Question(String questionText, List<Integer> correctAnswers, List<String> options, String imageURL) {
         this.questionText = questionText;
         this.correctAnswers = correctAnswers;
         this.options = options;
@@ -40,11 +40,11 @@ public class Question {
         this.questionText = questionText;
     }
 
-    public List<String> getCorrectAnswers() {
+    public List<Integer> getCorrectAnswers() {
         return correctAnswers;
     }
 
-    public void setCorrectAnswers(List<String> correctAnswers) {
+    public void setCorrectAnswers(List<Integer> correctAnswers) {
         this.correctAnswers = correctAnswers;
     }
 
